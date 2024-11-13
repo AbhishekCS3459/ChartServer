@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { Connect } from "./db/connect"; 
+import { Connect } from "./db/connect";
 import userRoutes from "./routes/auth";
 import dashboard from "./routes/dashboard";
 import accessLogsRoute from "./routes/logs";
@@ -8,7 +8,7 @@ import logs from "./routes/logs";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import { Request, Response } from "express";
 dotenv.config();
 
 const app = express();
@@ -26,7 +26,6 @@ app.use(
 app.use(cookieParser());
 
 (async () => {
-  
   await Connect.connectToDatabase(process.env.MONGO_URI);
 })();
 
@@ -34,4 +33,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboard);
 
 app.use("/api/logs", accessLogsRoute);
+
+app.get("/", (req:Request, res:Response) => {
+  res.send("Welcome to the Access Logs API");
+});
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
